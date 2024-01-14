@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SecurityServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SecurityServer.Domain.Shared\SecurityServer.Domain.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AElf.Cryptography" Version="1.5.0" />
+    <PackageReference Include="AElf.Types" Version="1.5.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Volo.Abp.Core" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.Identity.Domain" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.OpenIddict.Domain" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="7.0.0" />
+  </ItemGroup>
+
+
+</Project>

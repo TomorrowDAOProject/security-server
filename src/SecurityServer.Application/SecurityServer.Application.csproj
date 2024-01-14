@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>SecurityServer</RootNamespace>
+  </PropertyGroup>
+
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\SecurityServer.Domain\SecurityServer.Domain.csproj" />
+    <ProjectReference Include="..\SecurityServer.Application.Contracts\SecurityServer.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+    <PackageReference Include="Volo.Abp.Account.Application" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.BlobStoring" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.Core" Version="7.0.0" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="7.0.0" />
+    <PackageReference Include="AElf.Client" Version="1.1.0" />
+    <PackageReference Include="Nethereum.KeyStore" Version="3.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
+  </ItemGroup>
+  
+</Project>
