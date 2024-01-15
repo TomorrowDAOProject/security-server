@@ -90,10 +90,10 @@ public class EncryptDataDto
 
         public EncryptDataDto Build()
         {
-            if (_password.IsNullOrEmpty()) throw new ArgumentException("password");
-            if (_secret.IsNullOrEmpty()) throw new ArgumentException("secret");
-            if (_instance.Nonce.IsNullOrEmpty()) throw new ArgumentException("salt");
-            if (_password != _repeatPassword) throw new ArgumentException("password not match");
+            AssertHelper.NotEmpty(_password ?? CommonConstant.EmptyString, "Invalid password");
+            AssertHelper.NotEmpty(_secret, "Invalid secret");
+            AssertHelper.NotEmpty(_instance.Nonce, "Invalid nonce");
+            AssertHelper.IsTrue(_password == _repeatPassword, "Password not match");
             _instance.Encrypt(_password!, _secret);
             return _instance;
         }
@@ -115,8 +115,8 @@ public class EncryptDataDto
             success = false;
             if (type.IsNullOrEmpty())
             {
-                _instance.EncryptType = SecurityServer.Common.EncryptType.Default;
-                Console.WriteLine($"( Default encrypt type {SecurityServer.Common.EncryptType.Default} will be used)");
+                _instance.EncryptType = Common.EncryptType.Default;
+                Console.WriteLine($"( Default encrypt type {Common.EncryptType.Default} will be used)");
                 success = true;
             }
             else if (SecurityServer.Common.EncryptType.All.Contains(type))

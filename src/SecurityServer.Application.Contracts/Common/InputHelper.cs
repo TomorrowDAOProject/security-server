@@ -40,10 +40,7 @@ public static class InputHelper
     
     public static string ReadFile(string path)
     {
-        if (!File.Exists(path))
-        {
-            throw new UserFriendlyException("File not exits " + path);
-        }
+        AssertHelper.IsTrue(File.Exists(path), "File not exits " + path);
         using var textReader = File.OpenText(path);
         return textReader.ReadToEnd();
     }
