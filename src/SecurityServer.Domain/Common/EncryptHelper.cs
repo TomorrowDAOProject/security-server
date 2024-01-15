@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using AElf;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SecurityServer.Common;
 
@@ -43,14 +44,13 @@ public static class EncryptHelper
     
     public static byte[] AesCbcEncrypt(byte[] sourceData, byte[] password, byte[]? salt = null)
     {
-        salt ??= new byte[16];
         using var aesAlg = Aes.Create();
         aesAlg.KeySize = KeySize;
         aesAlg.BlockSize = BlockSize;
         aesAlg.Mode = CipherMode.CBC;
         aesAlg.Padding = PaddingMode.PKCS7;
-        aesAlg.Key = new Rfc2898DeriveBytes(password, salt, Iterations).GetBytes(KeySize / 8);
-        aesAlg.IV = new Rfc2898DeriveBytes(password, salt, 1).GetBytes(BlockSize / 8);
+        aesAlg.Key = new Rfc2898DeriveBytes(password, salt ?? new byte[16], Iterations).GetBytes(KeySize / 8);
+        if (!salt.IsNullOrEmpty())  aesAlg.GenerateIV();
         var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
         using var msEncrypt = new MemoryStream();
         msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
@@ -63,16 +63,14 @@ public static class EncryptHelper
 
     public static byte[] AesCbcDecrypt(byte[] encryptData, byte[] password, byte[]? salt = null)
     {
-        salt ??= new byte[16];
         using var aesAlg = Aes.Create();
         aesAlg.KeySize = KeySize;
         aesAlg.BlockSize = BlockSize;
         aesAlg.Mode = CipherMode.CBC;
         aesAlg.Padding = PaddingMode.PKCS7;
-        aesAlg.Key = new Rfc2898DeriveBytes(password, salt, Iterations).GetBytes(KeySize / 8);
+        aesAlg.Key = new Rfc2898DeriveBytes(password, salt ?? new byte[16], Iterations).GetBytes(KeySize / 8);
         var iv = new byte[aesAlg.BlockSize / 8];
         Array.Copy(encryptData, 0, iv, 0, iv.Length);
-        aesAlg.IV = iv;
         var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, iv);
         using var msDecrypt = new MemoryStream();
         using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Write))
