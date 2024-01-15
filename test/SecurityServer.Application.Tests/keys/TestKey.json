@@ -1,0 +1,9 @@
+{
+  "Version": 1,
+  "EncryptType": "AesGcm",
+  "Nonce": "11af9b72446c046320d3dc13",
+  "Tag": "045d313dcec6b2452de22cf3fe99cd68",
+  "Key": "TestKey",
+  "Information": "test key",
+  "EncryptData": "3a8eee1a64ee81"
+}

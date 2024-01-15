@@ -25,16 +25,16 @@ public class StorageProvider : ISingletonDependency
         LoadEncryptDataWithProvidedPassword();
         LoadKeyStoreWithPassword();
     }
-    
+
     private void AssertKeyMod(string key, Mod checkMod)
     {
-        if (!_keyStoreOptions.CurrentValue.ThirdPart.TryGetValue(key, out var keyOption))
-            throw new UserFriendlyException("Secret of key " + key + "not found");
-
-        if (keyOption.Mod.IsNullOrEmpty() || !keyOption.Mod.ToUpper().Contains(checkMod.ToString().ToUpper()))
-            throw new UnauthorizedAccessException("Permission denied");
+        AssertHelper.IsTrue(_keyStoreOptions.CurrentValue.ThirdPart.TryGetValue(key, out var keyOption), "Secret of key {} not found", key);
+        AssertHelper.NotNull(keyOption, "Option of key {} empty", key);
+        
+        AssertHelper.NotEmpty(keyOption!.Mod, "Permission denied");
+        AssertHelper.IsTrue(keyOption.Mod.ToUpper().Contains(checkMod.ToString().ToUpper()), "Permission denied");
     }
-    
+
     /// <summary>
     ///     Query readable keys
     /// </summary>
@@ -44,8 +44,8 @@ public class StorageProvider : ISingletonDependency
     public string GetThirdPartSecret(string key)
     {
         AssertKeyMod(key, Mod.R);
-        if (!_secretStorage.TryGetValue(key, out var secret) || secret.IsNullOrEmpty())
-            throw new UserFriendlyException("Secret of key " + key + "not found");
+        AssertHelper.IsTrue(_secretStorage.TryGetValue(key, out var secret), "Secret of key {} not found", key);
+        AssertHelper.NotEmpty(secret, "Secret of key {} empty", key);
         return secret!;
     }
 
@@ -64,12 +64,12 @@ public class StorageProvider : ISingletonDependency
         where TInput : BaseThirdPartExecuteInput
     {
         AssertKeyMod(executeInput.Key, Mod.X);
-        if (!_secretStorage.TryGetValue(executeInput.Key, out var secret) || secret.IsNullOrEmpty())
-            throw new UserFriendlyException("Secret of key " + executeInput.Key + "not found");
-        
+        AssertHelper.IsTrue(_secretStorage.TryGetValue(executeInput.Key, out var secret), "Secret of key {} not found",
+            executeInput.Key);
+        AssertHelper.NotEmpty(secret, "Secret of key {} empty", executeInput.Key);
         return strategy.Execute(secret, executeInput);
     }
-    
+
     private void LoadEncryptDataWithProvidedPassword()
     {
         if (_keyStoreOptions.CurrentValue.Path.IsNullOrEmpty()) return;

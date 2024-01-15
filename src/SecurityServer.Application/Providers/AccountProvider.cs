@@ -18,11 +18,12 @@ public class AccountProvider : ISingletonDependency
 {
     private readonly ILogger<AccountProvider> _logger;
     private readonly Dictionary<string, AccountHolder> _accountHolders = new();
-    private readonly IOptions<KeyStoreOptions> _keyStoreOptions;
-    private readonly IOptions<KeyPairInfoOptions> _keyPairInfoOptions;
+    private readonly IOptionsMonitor<KeyStoreOptions> _keyStoreOptions;
+    private readonly IOptionsMonitor<KeyPairInfoOptions> _keyPairInfoOptions;
     private static readonly KeyStoreService KeyStoreService = new();
 
-    public AccountProvider(IOptions<KeyStoreOptions> keyStoreOptions, IOptions<KeyPairInfoOptions> keyPairInfoOptions,
+    public AccountProvider(IOptionsMonitor<KeyStoreOptions> keyStoreOptions,
+        IOptionsMonitor<KeyPairInfoOptions> keyPairInfoOptions,
         ILogger<AccountProvider> logger)
     {
         _keyStoreOptions = keyStoreOptions;
@@ -43,8 +44,8 @@ public class AccountProvider : ISingletonDependency
 
     private void LoadKeyPair()
     {
-        if (_keyPairInfoOptions.Value.PrivateKeyDictionary.IsNullOrEmpty()) return;
-        foreach (var (publicKey, privateKey) in _keyPairInfoOptions.Value.PrivateKeyDictionary)
+        if (_keyPairInfoOptions.CurrentValue.PrivateKeyDictionary.IsNullOrEmpty()) return;
+        foreach (var (publicKey, privateKey) in _keyPairInfoOptions.CurrentValue.PrivateKeyDictionary)
         {
             var account = new AccountHolder(privateKey);
             _logger.LogInformation("Load key pair success, address: {Address}", account.AddressObj().ToBase58());
@@ -55,7 +56,7 @@ public class AccountProvider : ISingletonDependency
 
     private string ReadKeyStore(string address)
     {
-        var path = PathHelper.ResolvePath(_keyStoreOptions.Value.Path + "/" + address + ".json");
+        var path = PathHelper.ResolvePath(_keyStoreOptions.CurrentValue.Path + "/" + address + ".json");
         if (!File.Exists(path))
         {
             throw new UserFriendlyException("keystore file not exits " + path);
@@ -68,9 +69,9 @@ public class AccountProvider : ISingletonDependency
 
     private void LoadKeyStoreWithPassword()
     {
-        if (_keyStoreOptions.Value.Path.IsNullOrEmpty()) return;
-        if (_keyStoreOptions.Value.Passwords.IsNullOrEmpty()) return;
-        foreach (var (address, password) in _keyStoreOptions.Value.Passwords)
+        if (_keyStoreOptions.CurrentValue.Path.IsNullOrEmpty()) return;
+        if (_keyStoreOptions.CurrentValue.Passwords.IsNullOrEmpty()) return;
+        foreach (var (address, password) in _keyStoreOptions.CurrentValue.Passwords)
         {
             var keyStoreContent = ReadKeyStore(address);
             var privateKey = KeyStoreService.DecryptKeyStoreFromJson(password, keyStoreContent);
@@ -83,10 +84,10 @@ public class AccountProvider : ISingletonDependency
 
     private void LoadKeyStoreWithInput()
     {
-        if (_keyStoreOptions.Value.Path.IsNullOrEmpty()) return;
-        if (_keyStoreOptions.Value.LoadAddress.IsNullOrEmpty()) return;
+        if (_keyStoreOptions.CurrentValue.Path.IsNullOrEmpty()) return;
+        if (_keyStoreOptions.CurrentValue.LoadAddress.IsNullOrEmpty()) return;
         var keyStoreDict = new Dictionary<string, string>();
-        foreach (var address in _keyStoreOptions.Value.LoadAddress)
+        foreach (var address in _keyStoreOptions.CurrentValue.LoadAddress)
         {
             // account already exists, skip
             if (_accountHolders.ContainsKey(address)) continue;
@@ -100,7 +101,7 @@ public class AccountProvider : ISingletonDependency
         Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaa Decode Key Store aaaaaaaaaaaaaaaaaaaaaaaaa");
         Console.WriteLine();
         Console.WriteLine(" Key store file path:     ");
-        Console.WriteLine("\t" + PathHelper.ResolvePath(_keyStoreOptions.Value.Path));
+        Console.WriteLine("\t" + PathHelper.ResolvePath(_keyStoreOptions.CurrentValue.Path));
         Console.WriteLine();
         Console.WriteLine(" Addresses will be loaded: ");
         foreach (var address in keyStoreDict.Keys)
@@ -127,6 +128,7 @@ public class AccountProvider : ISingletonDependency
             _accountHolders[account.PublicKey] = account;
             _accountHolders[account.AddressObj().ToBase58()] = account;
         }
+
         _logger.LogInformation("Done!");
     }
 
@@ -148,5 +150,4 @@ public class AccountProvider : ISingletonDependency
             return false;
         }
     }
-
 }

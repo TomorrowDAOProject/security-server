@@ -25,7 +25,7 @@ public class AppleAuthStrategy : IThirdPartExecuteStrategy<AppleAuthExecuteInput
 
     public CommonThirdPartExecuteOutput Execute(string secret, AppleAuthExecuteInput input)
     {
-        
+        secret = secret.Replace("\\n", "\n");
         var key = new ECDsaSecurityKey(ECDsa.Create());
         key.ECDsa.ImportPkcs8PrivateKey(Convert.FromBase64String(secret), out _);
         key.KeyId = input.KeyId;

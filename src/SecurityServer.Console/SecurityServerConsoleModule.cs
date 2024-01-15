@@ -1,4 +1,3 @@
-using Volo.Abp.AuditLogging;
 using Volo.Abp.Modularity;
 
 namespace SecurityServer;

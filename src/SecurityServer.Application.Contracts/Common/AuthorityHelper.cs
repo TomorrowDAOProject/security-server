@@ -1,7 +1,5 @@
 using System;
 using System.Security.Authentication;
-using System.Text;
-using AElf;
 using Microsoft.AspNetCore.Http;
 using SecurityServer.Options;
 
@@ -36,7 +34,6 @@ public class AuthorityHelper
 
     public static string CalculateSignature(string source, string secret)
     {
-        var sourceHash = HashHelper.ComputeFrom(source);
-        return EncryptHelper.AesCbcEncrypt(sourceHash.ToByteArray(), Encoding.UTF8.GetBytes(secret)).ToHex();
+        return EncryptHelper.AesCbcEncrypt(source, secret);
     }
 }

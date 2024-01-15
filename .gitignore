@@ -280,3 +280,5 @@ scripts/patcher/*
 .DS_Store
 **/.DS_Store
 **/Logs
+
+SecurityServer.sln.DotSettings.user

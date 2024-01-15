@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SecurityServer.Application\SecurityServer.Application.csproj" />
+    <ProjectReference Include="..\..\src\SecurityServer.HttpApi.Host\SecurityServer.HttpApi.Host.csproj" />
     <ProjectReference Include="..\SecurityServer.TestBase\SecurityServer.TestBase.csproj" />
   </ItemGroup>
 
@@ -22,6 +23,24 @@
     </PackageReference>
     <PackageReference Include="Volo.Abp.TestBase" Version="7.0.0" />
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="keys\AesGcmData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="keys\AesCbcData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="keys\appleMockKey.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="keys\TestKey.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="keys\4yK5iHxrRYPj7C2JwG938Ss24zq9EMgjgX182S5MJxuN9q32P.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 

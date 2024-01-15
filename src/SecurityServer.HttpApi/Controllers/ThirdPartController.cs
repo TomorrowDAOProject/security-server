@@ -81,7 +81,7 @@ public class ThirdPartController : AbpController
     }
 
     [HttpPost("thirdPart/appleAuth")]
-    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AlchemyHmacSignAsync(
+    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AppleAuthSignAsync(
         AppleAuthExecuteInput input)
     {
         var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
