@@ -37,57 +37,52 @@ public class ThirdPartController : AbpController
         _appleAuthStrategy = appleAuthStrategy;
     }
 
-    [HttpGet]
-    public Task<CommonResponse<string>> GetSecret(string key)
+    [HttpGet("secret")]
+    public Task<string> GetSecret(string key)
     {
         var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, key);
         var secret = _storageProvider.GetThirdPartSecret(key);
         secret = EncryptHelper.AesCbcEncrypt(secret, appsecret);
-        return Task.FromResult(new CommonResponse<string>(secret));
+        return Task.FromResult(secret);
     }
 
 
-    [HttpPost("thirdPart/alchemyAes")]
-    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AlchemyAesSignAsync(
+    [HttpPost("alchemyAes")]
+    public Task<CommonThirdPartExecuteOutput> AlchemyAesSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
             input.Key, input.BizData);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayAesSignStrategy);
-        // strategyOutput.Value = EncryptHelper.AesCbcEncrypt(strategyOutput.Value, appsecret);
-        return Task.FromResult(new CommonResponse<CommonThirdPartExecuteOutput>(strategyOutput));
+        return Task.FromResult(strategyOutput);
     }
 
-    [HttpPost("thirdPart/alchemySha")]
-    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AlchemyShaSignAsync(
+    [HttpPost("alchemySha")]
+    public Task<CommonThirdPartExecuteOutput> AlchemyShaSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
-            input.Key, input.BizData);
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayShaSignStrategy);
-        // strategyOutput.Value = EncryptHelper.AesCbcEncrypt(strategyOutput.Value, appsecret);
-        return Task.FromResult(new CommonResponse<CommonThirdPartExecuteOutput>(strategyOutput));
+        return Task.FromResult(strategyOutput);
     }
 
-    [HttpPost("thirdPart/alchemyHmac")]
-    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AlchemyHmacSignAsync(
+    [HttpPost("alchemyHmac")]
+    public Task<CommonThirdPartExecuteOutput> AlchemyHmacSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
             input.Key, input.BizData);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayHmacSignStrategy);
-        // strategyOutput.Value = EncryptHelper.AesCbcEncrypt(strategyOutput.Value, appsecret);
-        return Task.FromResult(new CommonResponse<CommonThirdPartExecuteOutput>(strategyOutput));
+        return Task.FromResult(strategyOutput);
     }
 
-    [HttpPost("thirdPart/appleAuth")]
-    public Task<CommonResponse<CommonThirdPartExecuteOutput>> AppleAuthSignAsync(
+    [HttpPost("appleAuth")]
+    public Task<CommonThirdPartExecuteOutput> AppleAuthSignAsync(
         AppleAuthExecuteInput input)
     {
-        var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
             input.Key, input.KeyId, input.TeamId, input.ClientId);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _appleAuthStrategy);
-        // strategyOutput.Value = EncryptHelper.AesCbcEncrypt(strategyOutput.Value, appsecret);
-        return Task.FromResult(new CommonResponse<CommonThirdPartExecuteOutput>(strategyOutput));
+        return Task.FromResult(strategyOutput);
     }
 }

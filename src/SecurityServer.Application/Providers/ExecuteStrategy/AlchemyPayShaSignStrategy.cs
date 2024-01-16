@@ -15,7 +15,8 @@ public class AlchemyPayShaSignStrategy : IThirdPartExecuteStrategy<CommonThirdPa
 
     public CommonThirdPartExecuteOutput Execute(string secret, CommonThirdPartExecuteInput input)
     {
-        var bytes = Encoding.UTF8.GetBytes(input.BizData);
+        var source = string.Join(CommonConstant.EmptyString, input.Key, secret, input.BizData);
+        var bytes = Encoding.UTF8.GetBytes(source);
         var hashBytes = SHA1.Create().ComputeHash(bytes);
 
         var sb = new StringBuilder();

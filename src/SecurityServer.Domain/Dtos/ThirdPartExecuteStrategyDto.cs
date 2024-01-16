@@ -8,7 +8,6 @@ public class BaseThirdPartExecuteInput
 {
 
     public string Key { get; set; }
-    public string Signature { get; set; }
     
 }
 
@@ -34,16 +33,6 @@ public class AppleAuthExecuteInput : BaseThirdPartExecuteInput
     public string ClientId { get; set; }
 }
 
-
-
-/// <summary>
-///     The basic return result of the key execution policy.
-///     The specific return value is defined in the business subclass.
-/// </summary>
-public class BaseThirdPartExecuteOutput
-{
-    public string Signature { get; set; }
-}
 
 /// <summary>
 ///     The return result of the general key execution policy,
