@@ -28,7 +28,7 @@ public class AppleAuthStrategy : IThirdPartExecuteStrategy<AppleAuthExecuteInput
         secret = secret.Replace("\\n", "\n");
         var key = new ECDsaSecurityKey(ECDsa.Create());
         key.ECDsa.ImportPkcs8PrivateKey(Convert.FromBase64String(secret), out _);
-        key.KeyId = input.KeyId;
+        key.KeyId = input.Key;
 
         var descriptor = new SecurityTokenDescriptor
         {

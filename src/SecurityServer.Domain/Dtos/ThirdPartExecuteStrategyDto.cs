@@ -28,7 +28,6 @@ public class CommonThirdPartExecuteInput : BaseThirdPartExecuteInput
 /// </summary>
 public class AppleAuthExecuteInput : BaseThirdPartExecuteInput
 {
-    public string KeyId { get; set; }
     public string TeamId { get; set; }
     public string ClientId { get; set; }
 }

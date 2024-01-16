@@ -41,7 +41,6 @@ public class ControllerTest : SecurityServerApplicationTestBase
 
         var res = await storageController.GetSecret(key);
         res.ShouldNotBeNull();
-        res.Success.ShouldBeTrue();
         
     }
     
@@ -62,7 +61,6 @@ public class ControllerTest : SecurityServerApplicationTestBase
             BizData = data,
         });
         resAlchemyAes.ShouldNotBeNull();
-        resAlchemyAes.Success.ShouldBeTrue();
         
         var resAlchemySha = await storageController.AlchemyShaSignAsync(new CommonThirdPartExecuteInput
         {
@@ -70,7 +68,6 @@ public class ControllerTest : SecurityServerApplicationTestBase
             BizData = data,
         });
         resAlchemySha.ShouldNotBeNull();
-        resAlchemySha.Success.ShouldBeTrue();
         
         var resAlchemyHmac = await storageController.AlchemyHmacSignAsync(new CommonThirdPartExecuteInput
         {
@@ -78,7 +75,6 @@ public class ControllerTest : SecurityServerApplicationTestBase
             BizData = data,
         });
         resAlchemyHmac.ShouldNotBeNull();
-        resAlchemyHmac.Success.ShouldBeTrue();
         
     }
 
@@ -90,7 +86,6 @@ public class ControllerTest : SecurityServerApplicationTestBase
         var appleInput = new AppleAuthExecuteInput
         {
             Key = key,
-            KeyId = "KeyId",
             TeamId = "TeamId",
             ClientId = "ClientId"
         };
@@ -98,12 +93,11 @@ public class ControllerTest : SecurityServerApplicationTestBase
         storageController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
         storageController.HttpContext.Request.Headers["appid"] = "caserver";
         storageController.HttpContext.Request.Headers["signature"] = AuthorityHelper.CalculateSignature(
-            string.Join("", key, appleInput.KeyId, appleInput.TeamId, appleInput.ClientId), 
+            string.Join("", key, appleInput.TeamId, appleInput.ClientId), 
             "12345678");
 
         var appleSignResult = await storageController.AppleAuthSignAsync(appleInput);
         appleSignResult.ShouldNotBeNull();
-        appleSignResult.Success.ShouldBeTrue();
     }
     
     

@@ -51,8 +51,7 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyAesSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
-            input.Key, input.BizData);
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayAesSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -61,7 +60,7 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyShaSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key);
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayShaSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -70,8 +69,7 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyHmacSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
-            input.Key, input.BizData);
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayHmacSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -80,8 +78,8 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AppleAuthSignAsync(
         AppleAuthExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext,
-            input.Key, input.KeyId, input.TeamId, input.ClientId);
+        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.TeamId,
+            input.ClientId);
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _appleAuthStrategy);
         return Task.FromResult(strategyOutput);
     }

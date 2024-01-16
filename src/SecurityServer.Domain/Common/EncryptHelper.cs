@@ -12,6 +12,7 @@ public static class EncryptHelper
     private const int KeySize = 256;
     private const int BlockSize = 128;
     private const int Iterations = 1000;
+    private const int IvIterations = 1;
 
 
     public static byte[] AesGcmEncrypt(byte[] data, byte[] key, byte[] nonce, out byte[] tag)
@@ -50,7 +51,8 @@ public static class EncryptHelper
         aesAlg.Mode = CipherMode.CBC;
         aesAlg.Padding = PaddingMode.PKCS7;
         aesAlg.Key = new Rfc2898DeriveBytes(password, salt ?? new byte[16], Iterations).GetBytes(KeySize / 8);
-        if (!salt.IsNullOrEmpty())  aesAlg.GenerateIV();
+        if (salt.IsNullOrEmpty()) 
+            aesAlg.IV = new Rfc2898DeriveBytes(password, new byte[16], IvIterations).GetBytes(BlockSize / 8);
         var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
         using var msEncrypt = new MemoryStream();
         msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);

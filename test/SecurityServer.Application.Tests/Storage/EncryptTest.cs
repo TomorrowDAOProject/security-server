@@ -53,7 +53,14 @@ public class EncryptTest : SecurityServerApplicationTestBase
         Output.WriteLine(message);
         secretData.ShouldBe("123");
         
-    }   
+    }
+
+    [Fact]
+    public void EncryptCbc()
+    {
+        Output.WriteLine(EncryptHelper.AesCbcEncrypt("a", "a"));
+        Output.WriteLine(EncryptHelper.AesCbcEncrypt("a", "a"));
+    }
     
     
     

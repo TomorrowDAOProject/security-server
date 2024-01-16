@@ -95,7 +95,6 @@ public class StorageTest : SecurityServerApplicationTestBase
         var appleSign = storageProvider.ExecuteThirdPartSecret(new AppleAuthExecuteInput
         {
             Key = "appleMockKey",
-            KeyId = "111",
             TeamId = "111",
             ClientId = "222"
         }, appleSignStrategy);
