@@ -31,8 +31,14 @@ public class EncryptJsonVerifyCommand : ICommand
             var json = File.ReadAllText(path);
             var encryptData = JsonConvert.DeserializeObject<EncryptDataDto>(json);
             var secret = encryptData!.Decrypt(InputHelper.ReadPassword("Password: "));
+            
             // Console.WriteLine($"Secret:{secret}");
             Console.WriteLine("Encrypt json verified!");
+
+            if (InputHelper.ReadText("Input \"display\" to display secret: ") == "display")
+            {
+                Console.WriteLine(secret);
+            }
         }
         catch (Exception e)
         {

@@ -24,7 +24,6 @@
     <ItemGroup>
         <ProjectReference Include="..\SecurityServer.Application\SecurityServer.Application.csproj" />
         <ProjectReference Include="..\SecurityServer.HttpApi\SecurityServer.HttpApi.csproj" />
-        <ProjectReference Include="..\SecurityServer.Console\SecurityServer.Console.csproj" />
     </ItemGroup>
 
     <ItemGroup>
