@@ -39,7 +39,7 @@ public class StorageTest : SecurityServerApplicationTestBase
             }, alchemyPayAesStrategy));
         achAesSign.Message.ShouldBe("Permission denied");
 
-        var testKey = Assert.ThrowsAny<Exception>(() => storageProvider.GetThirdPartSecret("TestKey"));
+        var testKey = Assert.ThrowsAny<Exception>(() => storageProvider.GetThirdPartSecret(It.IsAny<string>(),"TestKey"));
         testKey.Message.ShouldBe("Permission denied");
     }
 
@@ -48,15 +48,15 @@ public class StorageTest : SecurityServerApplicationTestBase
     {
         var storageProvider = GetRequiredService<StorageProvider>();
 
-        var gcmSecret = storageProvider.GetThirdPartSecret("AesGcmData");
+        var gcmSecret = storageProvider.GetThirdPartSecret(It.IsAny<string>(),"AesGcmData");
         Output.WriteLine(gcmSecret);
         gcmSecret.ShouldBe("1111111111111111");
 
-        var cbcSecret = storageProvider.GetThirdPartSecret("AesCbcData");
+        var cbcSecret = storageProvider.GetThirdPartSecret(It.IsAny<string>(),"AesCbcData");
         Output.WriteLine(cbcSecret);
         cbcSecret.ShouldBe("1111111111111111");
 
-        var appleSecret = storageProvider.GetThirdPartSecret("appleMockKey");
+        var appleSecret = storageProvider.GetThirdPartSecret(It.IsAny<string>(),"appleMockKey");
         Output.WriteLine(cbcSecret);
         appleSecret.ShouldBe(
             "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgZlhOmKciniLq5vn6\\nu8a8O2GHEsFx8PJbYP5cDqljLSihRANCAASj0gesLmRK/BTFFLvuj16dnbq6VthI\\nlE6xIRKXNq+NGs2S0K9/P4jQDdPiflvto6OwFt/LnYnulBQsBiDuHd8u");
