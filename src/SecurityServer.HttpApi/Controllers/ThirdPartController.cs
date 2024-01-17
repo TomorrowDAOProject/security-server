@@ -22,12 +22,12 @@ public class ThirdPartController : AbpController
     private readonly IOptionsMonitor<AuthorityOptions> _authOptions;
     private readonly AlchemyPayAesSignStrategy _alchemyPayAesSignStrategy;
     private readonly AlchemyPayShaSignStrategy _alchemyPayShaSignStrategy;
-    private readonly AlchemyPayShaSignStrategy _alchemyPayHmacSignStrategy;
+    private readonly AlchemyPayHmacSignStrategy _alchemyPayHmacSignStrategy;
     private readonly AppleAuthStrategy _appleAuthStrategy;
 
     public ThirdPartController(StorageProvider storageProvider, IOptionsMonitor<AuthorityOptions> authOptions,
         AlchemyPayAesSignStrategy alchemyPayAesSignStrategy, AlchemyPayShaSignStrategy alchemyPayShaSignStrategy,
-        AlchemyPayShaSignStrategy alchemyPayHmacSignStrategy, AppleAuthStrategy appleAuthStrategy)
+        AlchemyPayHmacSignStrategy alchemyPayHmacSignStrategy, AppleAuthStrategy appleAuthStrategy)
     {
         _storageProvider = storageProvider;
         _authOptions = authOptions;
@@ -40,8 +40,8 @@ public class ThirdPartController : AbpController
     [HttpGet("secret")]
     public Task<string> GetSecret(string key)
     {
-        var (_, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, key);
-        var secret = _storageProvider.GetThirdPartSecret(key);
+        var (appid, appsecret) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, key);
+        var secret = _storageProvider.GetThirdPartSecret(appid,  key);
         secret = EncryptHelper.AesCbcEncrypt(secret, appsecret);
         return Task.FromResult(secret);
     }
@@ -51,7 +51,8 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyAesSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        var (appid, _) = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        input.AppId = appid;
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayAesSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -60,7 +61,8 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyShaSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        var (appid, _)  = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        input.AppId = appid;
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayShaSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -69,7 +71,8 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AlchemyHmacSignAsync(
         CommonThirdPartExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        var (appid, _)  = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.BizData);
+        input.AppId = appid;
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _alchemyPayHmacSignStrategy);
         return Task.FromResult(strategyOutput);
     }
@@ -78,8 +81,9 @@ public class ThirdPartController : AbpController
     public Task<CommonThirdPartExecuteOutput> AppleAuthSignAsync(
         AppleAuthExecuteInput input)
     {
-        _ = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.TeamId,
+        var (appid, _)  = AuthorityHelper.AssertDappHeader(_authOptions.CurrentValue, HttpContext, input.Key, input.TeamId,
             input.ClientId);
+        input.AppId = appid;
         var strategyOutput = _storageProvider.ExecuteThirdPartSecret(input, _appleAuthStrategy);
         return Task.FromResult(strategyOutput);
     }

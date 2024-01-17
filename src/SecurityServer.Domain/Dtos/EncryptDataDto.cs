@@ -101,6 +101,7 @@ public class EncryptDataDto
         public EncryptDataBuilder Secret(string secret)
         {
             _secret = secret;
+            Console.WriteLine();
             return this;
         }
 
@@ -138,6 +139,7 @@ public class EncryptDataDto
         {
             _password = HashHelper.ComputeFrom(password).ToHex();
             _repeatPassword = null;
+            Console.WriteLine();
             return this;
         }
 
@@ -145,6 +147,7 @@ public class EncryptDataDto
         {
             _repeatPassword = HashHelper.ComputeFrom(repeatPassword).ToHex();
             success = !_password.IsNullOrEmpty() && _password == _repeatPassword;
+            Console.WriteLine(success ? "Success!" : "Failed!");
             return this;
         }
 

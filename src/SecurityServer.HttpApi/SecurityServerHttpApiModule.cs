@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SecurityServer.Options;
 using Volo.Abp.Modularity;
 
 namespace SecurityServer;
@@ -14,6 +15,10 @@ public class SecurityServerHttpApiModule : AbpModule
         {
             mvcBuilder.AddApplicationPartIfNotExists(typeof(SecurityServerHttpApiModule).Assembly);
         });
+        
+        var configuration = context.Services.GetConfiguration();
+        Configure<AuthorityOptions>(configuration.GetSection("Authority"));
+
     }
 }
 

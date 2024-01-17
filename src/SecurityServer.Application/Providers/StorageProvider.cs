@@ -30,7 +30,7 @@ public class StorageProvider : ISingletonDependency
     {
         AssertHelper.IsTrue(_keyStoreOptions.CurrentValue.ThirdPart.TryGetValue(key, out var keyOption), "Secret of key {} not found", key);
         AssertHelper.NotNull(keyOption, "Option of key {} empty", key);
-        
+
         AssertHelper.NotEmpty(keyOption!.Mod, "Permission denied");
         AssertHelper.IsTrue(keyOption.Mod.ToUpper().Contains(checkMod.ToString().ToUpper()), "Permission denied");
     }
@@ -41,9 +41,10 @@ public class StorageProvider : ISingletonDependency
     /// <param name="key"></param>
     /// <returns></returns>
     /// <exception cref="UserFriendlyException"></exception>
-    public string GetThirdPartSecret(string key)
+    public string GetThirdPartSecret(string appId, string key)
     {
         AssertKeyMod(key, Mod.R);
+        _logger.LogDebug("GetThirdPartSecret appId={AppId}, key={Key}", appId, key);
         AssertHelper.IsTrue(_secretStorage.TryGetValue(key, out var secret), "Secret of key {} not found", key);
         AssertHelper.NotEmpty(secret, "Secret of key {} empty", key);
         return secret!;
@@ -67,6 +68,9 @@ public class StorageProvider : ISingletonDependency
         AssertHelper.IsTrue(_secretStorage.TryGetValue(executeInput.Key, out var secret), "Secret of key {} not found",
             executeInput.Key);
         AssertHelper.NotEmpty(secret, "Secret of key {} empty", executeInput.Key);
+        
+        _logger.LogDebug("Execute secret strategy {Strategy}, appId={AppId} input={Input}",
+            strategy.ExecuteStrategy().ToString(), executeInput.AppId, JsonConvert.SerializeObject(executeInput));
         return strategy.Execute(secret, executeInput);
     }
 
@@ -92,7 +96,7 @@ public class StorageProvider : ISingletonDependency
             }
 
             _secretStorage[key] = secretData;
-            _logger.LogWarning(
+            _logger.LogInformation(
                 "Decrypt ThirdPart apikey data {File} with provided password, Information:{EncryptInformation}",
                 file, encrypt.Information);
         }
@@ -121,12 +125,14 @@ public class StorageProvider : ISingletonDependency
         Console.WriteLine();
         Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaa Decode ThirdPart apikey aaaaaaaaaaaaaaaaaaaaa");
         Console.WriteLine();
+        Console.WriteLine("  Key store file path:     ");
+        Console.WriteLine($"\t{PathHelper.ResolvePath(_keyStoreOptions.CurrentValue.Path)}");
         Console.WriteLine("  Json files will be loaded: ");
         foreach (var (key, encryptData) in jsonContents)
         {
             var file = $"{key}.json";
             var info = encryptData.Information.IsNullOrEmpty() ? "(no info)" : encryptData.Information;
-            Console.WriteLine($"     {file} - {info} ");
+            Console.WriteLine($"\t{file} - {info} ");
         }
 
         Console.WriteLine();

@@ -1,14 +1,15 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using SecurityServer.Common;
 using SecurityServer.Dtos;
+using ILogger = DnsClient.Internal.ILogger;
 
 namespace SecurityServer.Providers.ExecuteStrategy;
 
 public class AlchemyPayAesSignStrategy : IThirdPartExecuteStrategy<CommonThirdPartExecuteInput, CommonThirdPartExecuteOutput>
 {
-    
     public ThirdPartExecuteStrategy ExecuteStrategy()
     {
         return ThirdPartExecuteStrategy.AlchemyPayAes;
