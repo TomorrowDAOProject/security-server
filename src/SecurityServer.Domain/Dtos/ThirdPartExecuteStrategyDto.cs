@@ -7,7 +7,7 @@ namespace SecurityServer.Dtos;
 public class BaseThirdPartExecuteInput
 {
 
-    public string AppId { get; set; }
+    public string? AppId { get; set; }
     public string Key { get; set; }
     
 }
