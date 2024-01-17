@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -118,7 +119,10 @@ public class StorageProvider : ISingletonDependency
         }
 
         if (jsonContents.IsNullOrEmpty()) return;
-
+        
+        _logger.LogInformation("Waiting for third-part secret storage decrypt...");
+        Task.Delay(1000);
+        
         Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine();
@@ -156,5 +160,6 @@ public class StorageProvider : ISingletonDependency
         }
 
         Console.WriteLine();
+        _logger.LogInformation("Done!");
     }
 }
