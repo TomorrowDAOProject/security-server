@@ -30,9 +30,7 @@ public class EncryptJsonVerifyCommand : ICommand
             path = PathHelper.ResolvePath(_configuration.GetSection("KeyStore:Path").Get<string>()) + path;
             var json = File.ReadAllText(path);
             var encryptData = JsonConvert.DeserializeObject<EncryptDataDto>(json);
-            var secret = encryptData!.Decrypt(InputHelper.ReadPassword("Password: "));
-            
-            // Console.WriteLine($"Secret:{secret}");
+            var secret = encryptData!.Decrypt(InputHelper.ReadPassword("Password [Hidden]: "));
             Console.WriteLine("Encrypt json verified!");
 
             if (InputHelper.ReadText("Input \"display\" to display secret: ") == "display")
