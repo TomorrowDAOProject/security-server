@@ -39,7 +39,7 @@ public class AccountProvider : ISingletonDependency
         var accountExists = _accountHolders.TryGetValue(addressOrPublicKey, out var account);
         if (!accountExists) throw new UserFriendlyException("Account not found");
 
-        return ByteStringExtensions.ToHex(account.GetSignatureWith(rawData));
+        return account.GetSignatureWith(rawData).ToHex();
     }
 
     private void LoadKeyPair()
@@ -47,10 +47,8 @@ public class AccountProvider : ISingletonDependency
         if (_keyPairInfoOptions.CurrentValue.PrivateKeyDictionary.IsNullOrEmpty()) return;
         foreach (var (publicKey, privateKey) in _keyPairInfoOptions.CurrentValue.PrivateKeyDictionary)
         {
-            var account = new AccountHolder(privateKey);
+            var account = LoadByPrivateKey(privateKey);
             _logger.LogInformation("Load key pair success, address: {Address}", account.AddressObj().ToBase58());
-            _accountHolders[account.PublicKey] = account;
-            _accountHolders[account.AddressObj().ToBase58()] = account;
         }
     }
 
@@ -66,6 +64,13 @@ public class AccountProvider : ISingletonDependency
         return textReader.ReadToEnd();
     }
 
+    private AccountHolder LoadByPrivateKey(string privateKeyHex)
+    {
+        var account = new AccountHolder(privateKeyHex);
+        _accountHolders[account.PublicKey] = account;
+        _accountHolders[account.AddressObj().ToBase58()] = account;
+        return account;
+    }
 
     private void LoadKeyStoreWithPassword()
     {
@@ -75,10 +80,8 @@ public class AccountProvider : ISingletonDependency
         {
             var keyStoreContent = ReadKeyStore(address);
             var privateKey = KeyStoreService.DecryptKeyStoreFromJson(password, keyStoreContent);
-            var account = new AccountHolder(privateKey.ToHex());
+            LoadByPrivateKey(privateKey.ToHex());
             _logger.LogInformation("Load key store success, address: {Address}", address);
-            _accountHolders[account.PublicKey] = account;
-            _accountHolders[account.AddressObj().ToBase58()] = account;
         }
     }
 

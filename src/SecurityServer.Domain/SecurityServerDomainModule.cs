@@ -1,11 +1,8 @@
-using Volo.Abp.AuditLogging;
 using Volo.Abp.Modularity;
 
 namespace SecurityServer;
 
-[DependsOn(typeof(SecurityServerDomainSharedModule),
-        typeof(AbpAuditLoggingDomainModule)
-)]
+[DependsOn(typeof(SecurityServerDomainSharedModule))]
 public class SecurityServerDomainModule : AbpModule
 {
     
