@@ -1,0 +1,9 @@
+{
+  "Version": 1,
+  "EncryptType": "AesGcm",
+  "Nonce": "d7c1ae2e979dc655f837162b",
+  "Tag": "facc6113881ed85126de072e3ca0f24c",
+  "Key": "temp1",
+  "Information": "test data",
+  "EncryptData": "99d853371bf965c05b6b3b68b4ddd4aa"
+}

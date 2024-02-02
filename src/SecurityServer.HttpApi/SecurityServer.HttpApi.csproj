@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SecurityServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SecurityServer.Application.Contracts\SecurityServer.Application.Contracts.csproj" />
+    <ProjectReference Include="..\SecurityServer.Application\SecurityServer.Application.csproj" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Core" Version="7.0.0" />
+  </ItemGroup>
+
+
+</Project>

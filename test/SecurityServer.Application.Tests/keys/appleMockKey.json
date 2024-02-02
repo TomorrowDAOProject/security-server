@@ -1,0 +1,9 @@
+{
+  "Version": 1,
+  "EncryptType": "AesGcm",
+  "Nonce": "2cdb7bec408adc2f3ace544a",
+  "Tag": "f4ef3af18bc68b1b44799974ecbdc8c9",
+  "Key": "apple",
+  "Information": "apple mock key",
+  "EncryptData": "fb58e08670b1184a456cf89292ec36d6253d21a5d38203a186d8d18697f296d793f23aaaa330a512fd81d7e3e12a17eef8d1184f016b0626a83203be2eed48f17236fd957e3494e246454165be960d6a8bafcbe5fc00354972f5c6daaf7f1e95378341d93b8ce0b1a5d0aebf626d2f31364adce2d3b2b56a4aeea773adde09bc87252a516881b92427222f8868a90c871b491ecb73ef8e32fc19d17cd4167184b5e370f46efe54379ce1adef85ac990e795265760fb6a02bba4383b5"
+}
